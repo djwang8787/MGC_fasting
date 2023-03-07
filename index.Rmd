@@ -1,0 +1,60 @@
+---
+title: "A preliminary case-study: Seasonal in-appetance observed with the Mekong giant catfishes."
+author: "Dajun Wang"
+site: bookdown::bookdown_site
+output:
+  pdf_document: default
+  bookdown::gitbook: default
+  bookdown::pdf_book:
+    number_sections: no
+  bookdown::pdf_document2:
+    number_sections: no
+  word_document: default
+  html_document:
+    df_print: paged
+documentclass: book
+bibliography: C:/Users/djwem/OneDrive - Nanyang Technological University/Projects/PhD_Free-roaming-dogs/PhD/zot-library.bib
+citation_package: none
+#csl: ../../../cjfas-cite-style.csl
+editor_options:
+  chunk_output_type: console
+spacing: double
+always_allow_html: yes
+mainfont: Times New Roman
+fontsize: 11pt
+geometry: margin = 1.2in
+lof: FALSE
+lot: FALSE
+header-includes:
+- \setlength\parindent{24pt}
+- \usepackage{indentfirst}
+- \usepackage{setspace}\doublespacing
+- \usepackage{lscape}
+- \newcommand{\blandscape}{\begin{landscape}}
+- \newcommand{\elandscape}{\end{landscape}}
+- \usepackage{fancyhdr}
+- \pagestyle{plain}
+- \fancyfoot[CO, CE]{\thepage}
+- \setlength{\headheight}{14.0pt}
+- \usepackage{microtype}
+- \usepackage{dcolumn}
+---
+
+```{r setup, include=FALSE}
+set.seed(2807)
+source("../kntr-options-packs.R", local = knitr::knit_global())
+Sys.setenv(R_GSCMD="C:/Program Files/gs/gs9.53.3/bin/gswin64.exe")
+knitr::opts_chunk$set(fig.pos = 'H') #to set all images to top
+options(tinytex.verbose = TRUE)
+options(tibble.print_max = Inf) # To show all rows
+options(tibble.width = Inf) # To show all columns; Inf controls value
+
+knitr::opts_chunk$set(fig.pos = 'H', fig.width=12, fig.height=8, fig.path='Figs/',echo=FALSE, warning=FALSE, message=FALSE)
+```
+
+```{r data load, include = FALSE}
+rm(list = ls())
+#load("data-object") # 
+source("catfish-analysis.R") # 
+```
+

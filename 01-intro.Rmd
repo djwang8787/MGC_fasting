@@ -1,0 +1,112 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+editor_options: 
+  chunk_output_type: console
+---
+
+# Introduction {#intro}
+
+Reserved.
+
+# Material and methods
+
+## Study subjects and design
+
+-   Data collection period: 2018 to 2021.
+
+    -   Data collected from 2018 only spanned 3 months.
+
+    -   From 2018--2020, data only consist of binary responses in feeding behaviour.
+
+    -   Supplementary data collected in 2021, which includes swimming behaviour (i.e., Erratic / Normal) and discolouration (i.e., Dark / Bright coloured). All data presented were in counts and also in binary terms.
+
+-   All data was collected via scan sampling; *n* = 6 fish.
+
+-   Local rainfall data was obtained from national agencies
+
+-   Data on monsoon seasons were also obtained from national agencies
+
+    -   Mekong season; June to November describes the Southwest (wetter) monsoon and the delta describes the Northeast (drier) season
+
+    -   Singapore; June to September describes the Southwest (wetter) monsoon season while December to March describes the Northeast (drier) season. The $\Delta$ describes the transitory monsoon seasons.
+
+## Data analysis
+
+-   All collected data were averaged across months.
+
+-   Model selection analysis was conducted to identify models that best describe the feeding behaviour between 2019--2021.
+
+    -   In relation to the null model, models are designed to examine monsoon periods in the Mekong basin and Singapore as well as rainfall (measured in mm) as predictors of feeding behaviour.
+
+    -   The year of the collected data was included as random effects to account for inter-year variation.
+
+To examine the periodicity of the fish' feeding behaviour, multicosinor models designed to examine the rhythmicity of feeding peaks within a year was used to model the proportion of feeding fish between months.
+
+Analysis begins by fitting a rhythmicity model onto the fish's feeding response for each month, and their general forms are specified as:
+
+$$logit(Y_{(t)}) = m_0 + \sum_{i=1}^k[b_i \cdot sin (\frac{2 \cdot \pi \cdot m} M) \cdot cos (\frac{2 \cdot \pi \cdot m} M)] + \epsilon$$
+
+where *Y* is the probability of the fish's feeding response (i.e., 0--100%) at that month *m*, *m~0~* is the intercept term, *k* is the number of sinusoidal components considered (in our case, *k* = 3), *M* represents the duration of each fitted period (12, 6, 4 and 2 months), and $\epsilon$ as the random effect (i.e., year of which the behavioural data was collected). The fits from each model were evaluated with an information theoretic approach [i.e., model selection analysis; see @andersonAvoidingPitfallsWhen2002] through the comparison of their second-order Akaike's Information Criterion [i.e., AIC~c~\; @bolkerGeneralizedLinearMixed2009], in addition to a null model where only the random terms were included. The model fits are ranked according to their AIC~c~ values, and models with $\Delta$AIC~c~ $\le$ 2 are considered most parsimonious for characterising the rhythmicity of the fish's feeding response.
+
+# Results
+Between 2019--2021, the studied catfish enter a state of inappetence collectively during the later months of each studied year (i.e., September to November; Figure \@ref(fig:trend)). This annual pattern of inappetence in the studied catfish appears largely driven by an endogenous cycle as results from the model selection analysis found that the model characterised by Southwest monsoon periods (i.e., June--November) observed in the Mekong Basin (i.e., see Mekong model; Table \@ref(tab:model-t)) was the best-fitted model for describing the fasting behaviours in the studied catfish ($\Delta$AIC~C~ \< 2.0; Table \@ref(tab:model-t)). In addition, the variance across years, included as random effects, were significantly low ($\le$ 0.01). 
+
+```{r model-t}
+coarse.model.tab = data.frame(
+  Model = c(
+    "Mekong",
+    "Mekong + Rainfall",
+    "Local",
+    "Local + Rainfall",
+    "Null",
+    "Rainfall"
+  ),
+  "$k$" = output.coarse$df,
+  "$LL$" = round(output.coarse$logLik,
+             digits = 1),
+  "AIC$_c$" = round(output.coarse$AICc,
+                digits = 1),
+  "$\\Delta$AIC$_c$" = round(output.coarse$delta,
+                         digits = 1),
+  "$wt$" = format(round(output.coarse$weight,
+                 digits = 2), nsmall = 1),
+  check.names = FALSE
+)
+knitr::kable(coarse.model.tab, 
+             booktabs = T,
+             escape = F,
+             align = "c",
+             caption = "Summary result of the six models reflects the average number of feeding Mekong giant catfish ($n$ = 6) explained by monsoon period (i.e., Mekong and Local) and rainfall at the Singapore Zoo between 2019--2021. The number of parameters ($k$), log-likelihood ($LL$), second-order Akaike Information Criterion (AIC$_c$), $\\Delta$AIC$_c$ and Akaike weights ($wt$) are presented.") %>% 
+  kable_styling(latex_options = 'scale_down')
+```
+
+
+```{r trend, fig.cap= "The proportion of Mekong giant catfish (*n* = 6) observed to enter a state of inappetence in an outdoor aquarium in Singapore. The red, green and blue dashed lines represent the fish feeding response documented from 2019, 2020 and 2021, respectively."}
+f1 = data %>%
+  filter(!Year == "2018") %>%
+  group_by(Year, as.numeric(Month)) %>%
+  dplyr::mutate(Eating = Eating/6)
+f2 = data.frame(x = 1:36,
+                   CR = rm2.cr)
+f1$CR = f2$CR
+ggplot(data = f1, aes(x = as.numeric(Month))) +
+  geom_line(aes(y = Eating, colour = as.factor(Year)), size = 1.0, linetype='dashed') + 
+  geom_line(aes(y = rescale(CR))) +
+  ylab("Proportion of feeding catfish") +
+  xlab("Month") + 
+  theme_minimal() +
+  theme(legend.position = 'none') +
+  scale_x_continuous(breaks=seq(1,12,1))
+```
+
+
+
+The monthly average rainfall (measured in mm) has seemingly less of an effect on feeding rates (Figure \@ref(fig:corr-f1)) as correlations from 2019--2021 were low (*R^2^* = 0.008, \< 0.001, 0.002, respectively). This is further supported in Table \@ref(tab:model-t) where rainfall measured in Singapore (mm), regardless of local or Mekong seasons, had less of an effect on the catfish' feeding behaviours (*wt* $\le$ 0.04, $\Delta$AIC~C~ \> 2.0; Table \@ref(tab:model-t)).
+
+
+# Discussion {#discussion}
+Reserved.
+
+
